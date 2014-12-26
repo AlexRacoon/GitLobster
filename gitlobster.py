@@ -81,14 +81,9 @@ class GitLobster(object):
     def _create_brunch_folder(self, branch_counter):
         os.makedirs(self.base_path + get_branch_name(branch_counter))
 
-    def do_work(self, push_after=None, push=None, just_push=None):
+    def do_work(self, push_after=None, push=None):
         for branch_num in range(self.branch_from, self.branch_to):
             branch = get_branch_name(branch_num)
-            if just_push:
-                checkout(branch)
-                push_current(branch)
-                continue
-
             new_branch(branch)
             for file_num in range(0, self.number_of_files):
                 create_file(self.base_path + get_branch_name(branch_num)+'_' + get_file_name(file_num), self.size)
@@ -114,16 +109,9 @@ def main():
     parser.add_argument("--push-after", required=False,  action="store_false", default=False,
                         help='<Optional> push all branches after repo being flooded')
 
-    parser.add_argument("--just-push", required=False,  action="store_false", default=False,
-                        help='<Optional> push all existing branches')
-
-    parser.add_argument("--origin", "-o", required=False,
-                        help='<Optional> -o remote origin to to push into \n E.g.: '
-                             'http://apinaev.example.com/root/gitlobstertests.git')
-
     args = parser.parse_args()
     lobster = GitLobster(args.directory, args.size, args.file_amount, args.branch_from, args.branch_to, args.origin)
-    lobster.do_work(args.push_after, args.push, args.just_push)
+    lobster.do_work(args.push_after, args.push)
 
 
 if __name__ == '__main__':
