@@ -123,7 +123,7 @@ def main():
 
     args = parser.parse_args()
     lobster = GitLobster(args.directory, args.size, args.file_amount, args.branch_from, args.branch_to, args.origin)
-    lobster.do_work(args.push_after, args.push)
+    lobster.do_work(args.push_after, args.push, args.just_push)
 
 
 if __name__ == '__main__':
