@@ -97,29 +97,23 @@ class GitLobster(object):
 
 
 def main():
-    # parser = argparse.ArgumentParser(description='Tiny util to flood git repositories')
-    # parser.add_argument("directory", help='full path to git project, default /home/coon/gitlobster/')
-    # parser.add_argument("--branch-from", "-f", required=True, type=int, help='-f branch counter range start')
-    # parser.add_argument("--branch-to", "-t", required=True, type=int, help='-t branch counter range stop')
-    # parser.add_argument("--file-amount", "-a", required=True, type=int, help='-a Amount of files in each branch')
-    # parser.add_argument("--size", "-s", required=True, type=int, help='-s File Size, kb')
-    # parser.add_argument("--push", "-p", required=False,  action="store_true", default=False,
-    #                     help='<Optional> -p push every branch after creation')
-    #
-    # parser.add_argument("--push-after", required=False,  action="store_false", default=False,
-    #                     help='<Optional> push all branches after repo being flooded')
-    #
-    # parser.add_argument("--origin", "-o", required=False,
-    #                     help='<Optional> -o remote origin to to push into \n E.g.: '
-    #                          'http://apinaev.example.com/root/gitlobstertests.git')
-    #
-    # args = parser.parse_args()
-    # lobster = GitLobster(args.directory, args.size, args.file_amount, args.branch_from, args.branch_to, args.origin)
-    # lobster.do_work(args.push_after, args.push)
+    parser = argparse.ArgumentParser(description='Tiny util to flood git repositories')
+    parser.add_argument("directory", help='full path to git project, default /home/coon/gitlobster/')
+    parser.add_argument("--branch-from", "-f", required=True, type=int, help='-f branch counter range start')
+    parser.add_argument("--branch-to", "-t", required=True, type=int, help='-t branch counter range stop')
+    parser.add_argument("--file-amount", "-a", required=True, type=int, help='-a Amount of files in each branch')
+    parser.add_argument("--size", "-s", required=True, type=int, help='-s File Size, kb')
+    parser.add_argument("--push", "-p", required=False,  action="store_true", default=False,
+                        help='<Optional> -p push every branch after creation')
+    parser.add_argument("--push-after", required=False,  action="store_false", default=False,
+                        help='<Optional> push all branches after repo being flooded')
+    parser.add_argument("--origin", "-o", required=False,
+                        help='<Optional> -o remote origin to to push into \n E.g.: '
+                        'http://apinaev.example.com/root/gitlobstertests.git')
 
-    lobster = GitLobster('/home/coon/gl', 1, 1, 1, 20, "http://root:1qa2ws3ed4rf5tg@185.63.188.217/root/gitlobstertests.git")
-    lobster.do_work(True, True)
-
+    args = parser.parse_args()
+    lobster = GitLobster(args.directory, args.size, args.file_amount, args.branch_from, args.branch_to, args.origin)
+    lobster.do_work(args.push_after, args.push)
 
 if __name__ == '__main__':
     main()
