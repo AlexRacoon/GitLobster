@@ -53,6 +53,11 @@ def push_all():
     call(['git', 'push', '--all', 'origin'])
 
 
+def push_current(branch_name):
+    call(['git', 'push', '--set-upstream', branch_name])
+    call(['git', 'push'])
+
+
 def add_origin(remote_origin):
     call(['git', 'remote', 'add', 'origin', remote_origin])
 
@@ -72,13 +77,16 @@ class GitLobster(object):
     def _create_brunch_folder(self, branch_counter):
         os.makedirs(self.base_path + get_branch_name(branch_counter))
 
-    def do_work(self, push_after=None):
+    def do_work(self, push_after=None, push=None):
         for branch_num in range(self.branch_from, self.branch_to):
-            new_branch(get_branch_name(branch_num))
+            branch = get_branch_name(branch_num)
+            new_branch(branch)
             for file_num in range(0, self.number_of_files):
                 create_file(self.base_path + get_branch_name(branch_num)+'_' + get_file_name(file_num), self.size)
             add()
             commit()
+            if push:
+                push_current(branch)
             checkout_master()
         if push_after:
             push_all()
@@ -91,16 +99,19 @@ def main():
     parser.add_argument("--branch-to", "-t", required=True, type=int, help='-t branch counter range stop')
     parser.add_argument("--file-amount", "-a", required=True, type=int, help='-a Amount of files in each branch')
     parser.add_argument("--size", "-s", required=True, type=int, help='-s File Size, kb')
-    parser.add_argument("--push-after", "-p", required=False,  action="store_true", default=False,
-                        help='-p push all branches after repo being flooded')
+    parser.add_argument("--push", "-p", required=False,  action="store_true", default=False,
+                        help='<Optional> -p push every branch after creation')
+
+    parser.add_argument("--push-after", required=False,  action="store_false", default=False,
+                        help='<Optional> push all branches after repo being flooded')
 
     parser.add_argument("--origin", "-o", required=False,
-                        help='-o remote origin to to push into \n E.g.: '
+                        help='<Optional> -o remote origin to to push into \n E.g.: '
                              'http://apinaev.example.com/root/gitlobstertests.git')
 
     args = parser.parse_args()
     lobster = GitLobster(args.directory, args.size, args.file_amount, args.branch_from, args.branch_to, args.origin)
-    lobster.do_work(args.push_after)
+    lobster.do_work(args.push_after, args.push)
 
 
 if __name__ == '__main__':
