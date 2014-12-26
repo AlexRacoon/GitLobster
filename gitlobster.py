@@ -62,6 +62,10 @@ def add_origin(remote_origin):
     call(['git', 'remote', 'add', 'origin', remote_origin])
 
 
+def checkout(branch):
+    call(['git', 'checkout', branch])
+
+
 class GitLobster(object):
     def __init__(self, working_dir, size, number_of_files, branch_from, branch_to, remote_origin):
         self.size = size
@@ -77,9 +81,14 @@ class GitLobster(object):
     def _create_brunch_folder(self, branch_counter):
         os.makedirs(self.base_path + get_branch_name(branch_counter))
 
-    def do_work(self, push_after=None, push=None):
+    def do_work(self, push_after=None, push=None, just_push=None):
         for branch_num in range(self.branch_from, self.branch_to):
             branch = get_branch_name(branch_num)
+            if just_push:
+                checkout(branch)
+                push_current(branch)
+                continue
+
             new_branch(branch)
             for file_num in range(0, self.number_of_files):
                 create_file(self.base_path + get_branch_name(branch_num)+'_' + get_file_name(file_num), self.size)
@@ -104,6 +113,9 @@ def main():
 
     parser.add_argument("--push-after", required=False,  action="store_false", default=False,
                         help='<Optional> push all branches after repo being flooded')
+
+    parser.add_argument("--just-push", required=False,  action="store_false", default=False,
+                        help='<Optional> push all existing branches')
 
     parser.add_argument("--origin", "-o", required=False,
                         help='<Optional> -o remote origin to to push into \n E.g.: '
