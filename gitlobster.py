@@ -109,6 +109,10 @@ def main():
     parser.add_argument("--push-after", required=False,  action="store_false", default=False,
                         help='<Optional> push all branches after repo being flooded')
 
+    parser.add_argument("--origin", "-o", required=False,
+                        help='<Optional> -o remote origin to to push into \n E.g.: '
+                             'http://apinaev.example.com/root/gitlobstertests.git')
+
     args = parser.parse_args()
     lobster = GitLobster(args.directory, args.size, args.file_amount, args.branch_from, args.branch_to, args.origin)
     lobster.do_work(args.push_after, args.push)
