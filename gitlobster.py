@@ -54,7 +54,7 @@ def push_all():
 
 
 def push_current(branch_name):
-    call(['git', 'push', '--set-upstream', 'origin/%s' % branch_name])
+    call(['git', 'push', '--set-upstream', 'origin %s' % branch_name])
     call(['git', 'push'])
 
 
@@ -82,6 +82,7 @@ class GitLobster(object):
         os.makedirs(self.base_path + get_branch_name(branch_counter))
 
     def do_work(self, push_after=None, push=None):
+        push_cnt = 0
         for branch_num in range(self.branch_from, self.branch_to):
             branch = get_branch_name(branch_num)
             new_branch(branch)
@@ -89,8 +90,10 @@ class GitLobster(object):
                 create_file(self.base_path + get_branch_name(branch_num)+'_' + get_file_name(file_num), self.size)
             add()
             commit()
-            if push:
+            push_cnt += 1
+            if push and push_cnt == 40:
                 push_all()
+                push_cnt = 0
             checkout_master()
         if push_after:
             push_all()
