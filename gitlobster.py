@@ -3,7 +3,6 @@ from subprocess import call
 import os
 import random
 import argparse
-import string
 
 
 def get_branch_name(cnt):
@@ -37,12 +36,13 @@ def add():
     call(['git', 'add', '.'])
 
 
-def init():
-    call(['git', 'init'])
-    with open('initial_readme.md', 'w') as f:
-        f.write('Process started\n')
-    add()
-    commit()
+def init(base_dir):
+    if not os.path.exists(base_dir+'.git'):
+        call(['git', 'init'])
+        with open('initial_readme.md', 'w') as f:
+            f.write('Process started\n')
+        add()
+        commit()
 
 
 def checkout_master():
@@ -74,7 +74,7 @@ class GitLobster(object):
         os.chdir(self.base_path)
         self.branch_from = branch_from
         self.branch_to = branch_to
-        init()
+        init(self.base_path)
         if remote_origin:
             add_origin(remote_origin)
 
