@@ -1,6 +1,15 @@
 #!/usr/bin/python2
 import gitlab
 import argparse
+import os
+from subprocess import call
+
+
+def pull(project_name):
+    current_dir = os.curdir
+    os.chdir('/home/coon/gitflood/%s' % project_name)
+    call(['git', 'pull'])
+    os.chdir(current_dir)
 
 
 class Seed(object):
@@ -39,7 +48,7 @@ class Seed(object):
             page += 1
             for project in projects:
                 print('%s: %d' % (project['name'], project['id']))
-                print('\n')
+                yield project['name'], project['id']
 
     def delete_user(self, user_id):
         self.g.deleteuser(user_id)
@@ -58,9 +67,16 @@ class Seed(object):
         print('Total %d' % count)
 
     def create_project(self, name):
-        p_id = self.g.createproject(name)['id']
+        projects = self.get_projects()
+        p_id = None
+        for project in projects:
+            if project[0] == name:
+                p_id = project[1]
+
         if not p_id:
-            raise Exception("Smth went wrong, unable to create this project")
+            p_id = self.g.createproject(name)['id']
+        else:
+            pull()
         self.update_users(None, p_id)
 
 
