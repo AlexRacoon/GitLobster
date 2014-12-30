@@ -83,7 +83,7 @@ class GitLobster(object):
 
     def do_work(self, push_after=None, push=None):
         push_cnt = 0
-        for branch_num in range(self.branch_from, self.branch_to):
+        for branch_num in range(self.branch_from, self.branch_to + 1):
             branch = get_branch_name(branch_num)
             new_branch(branch)
             for file_num in range(0, self.number_of_files):
@@ -95,8 +95,7 @@ class GitLobster(object):
                 push_all()
                 push_cnt = 0
             checkout_master()
-        if push_after:
-            push_all()
+        push_all()
 
 
 def main():
