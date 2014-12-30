@@ -28,7 +28,6 @@ class Seed(object):
             for user in users:
                 self.g.edituser(user['id'])
                 if project_id:
-                    print('Adding user to project')
                     self.g.addprojectmember(project_id, user['id'], 'master')
 
     def get_projects(self):
