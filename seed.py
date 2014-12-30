@@ -54,9 +54,16 @@ class Seed(object):
                 break
             page += 1
             for user in users:
-                print('%s - %d'%(user['name'], user['id']))
+                print('%s - %d' % (user['name'], user['id']))
                 count += 1
         print('Total %d' % count)
+
+    def create_project(self, name):
+        p_id = self.g.createproject(name)['id']
+        if not p_id:
+            raise Exception("Smth went wrong, unable to create this project")
+        self.update_users(None, p_id)
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -65,11 +72,13 @@ def main():
     parser.add_argument("--nfrom")
     parser.add_argument("--nto")
     parser.add_argument("--user-id")
-    parser.add_argument("--project-fullname")
+    parser.add_argument("--project-name")
     args = parser.parse_args()
     seed = Seed()
     if args.action == "create":
         seed.seed_users(args.nfrom, args.nto)
+    elif args.action == "new-project":
+        seed.create_project(args.project_name)
     elif args.action == "projects":
         seed.get_projects()
     elif args.action == "users":
