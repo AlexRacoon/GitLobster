@@ -74,9 +74,9 @@ class Seed(object):
 
         if not p_id:
             p_id = self.g.createproject(name)['id']
+            self.update_users(None, p_id)
         else:
             pull(name)
-        self.update_users(None, p_id)
 
 
 def main():
