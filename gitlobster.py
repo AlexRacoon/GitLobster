@@ -43,18 +43,22 @@ def init(base_dir):
             f.write('Process started\n')
         add()
         commit()
+        return False
+    return True
 
 
 def checkout_master():
     call(['git', 'checkout', 'master'])
 
 
-def push_all():
+def push_all(pool_first):
+    if pool_first:
+        call(['git', 'pull'])
     call(['git', 'push', '--all', 'origin'])
 
 
 def push_current(branch_name):
-    call(['git', 'push', '--set-upstream', 'origin %s' % branch_name])
+    call(['git', 'push', '-u', 'origin', branch_name])
     call(['git', 'push'])
 
 
@@ -74,7 +78,7 @@ class GitLobster(object):
         os.chdir(self.base_path)
         self.branch_from = branch_from
         self.branch_to = branch_to
-        init(self.base_path)
+        self.repo_exists = init(self.base_path)
         if remote_origin:
             add_origin(remote_origin)
 
@@ -92,10 +96,10 @@ class GitLobster(object):
             commit()
             push_cnt += 1
             if push and push_cnt == 40:
-                push_all()
+                push_all(self.repo_exists)
                 push_cnt = 0
             checkout_master()
-        push_all()
+        push_all(self.repo_exists)
 
 
 def main():
