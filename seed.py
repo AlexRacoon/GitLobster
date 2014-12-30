@@ -8,7 +8,7 @@ from subprocess import call
 def pull(project_name):
     current_dir = os.curdir
     os.chdir('/home/coon/gitflood/%s' % project_name)
-    call('for remote in `git branch -r`; do git branch --track $remote; done')
+    call(['for remote in `git branch -r`; do git branch --track $remote; done'])
     call(['git', 'fetch', '--all'])
     call(['git', 'pull', '-all'])
     os.chdir(current_dir)
