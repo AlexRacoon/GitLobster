@@ -47,7 +47,6 @@ class Seed(object):
                 break
             page += 1
             for project in projects:
-                print('%s: %d' % (project['name'], project['id']))
                 yield project['name'], project['id']
 
     def delete_user(self, user_id):
